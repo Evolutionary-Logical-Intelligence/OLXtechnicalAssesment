@@ -1,0 +1,141 @@
+.navbar {
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbarContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+}
+
+.logoText {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: -0.5px;
+  text-transform: none;
+}
+
+.locationSection {
+  display: flex;
+  align-items: center;
+}
+
+.searchSection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.languageButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.languageButton:hover {
+  color: #007bff;
+}
+
+.languageText {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.iconButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  border-radius: 4px;
+}
+
+.iconButton:hover {
+  color: #007bff;
+  background-color: #f5f5f5;
+}
+
+.sellButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.sellButton:hover {
+  background-color: #ffb300;
+}
+
+.sellButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .navbarContainer {
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .searchSection {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .languageButton {
+    display: none;
+  }
+
+  .searchSection {
+    max-width: 200px;
+  }
+
+  .logoText {
+    font-size: 24px;
+  }
+}
+
