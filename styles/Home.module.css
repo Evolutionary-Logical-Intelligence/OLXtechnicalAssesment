@@ -13,3 +13,24 @@
   color: #333;
 }
 
+@media (max-width: 768px) {
+  .main {
+    padding: 24px 16px;
+    min-height: calc(100vh - 60px);
+  }
+
+  .main h1 {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 20px 12px;
+  }
+
+  .main h1 {
+    font-size: 20px;
+  }
+}
+

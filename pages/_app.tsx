@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { useEffect } from 'react';
 import { LanguageProvider, useLanguage } from '../contexts/LanguageContext';
 import Navbar from '../components/Navbar';
@@ -14,6 +15,9 @@ function AppContent({ Component, pageProps, router }: AppProps) {
 
   return (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+      </Head>
       <Navbar />
       <Component {...pageProps} router={router} />
     </>

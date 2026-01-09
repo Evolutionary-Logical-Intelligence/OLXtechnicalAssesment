@@ -46,3 +46,38 @@
   height: 20px;
 }
 
+@media (max-width: 768px) {
+  .searchForm {
+    max-width: 100%;
+  }
+
+  .searchInput {
+    padding: 12px 14px;
+    font-size: 16px; 
+  }
+
+  .searchButton {
+    width: 52px;
+    height: 46px;
+    min-width: 52px;
+  }
+
+  .searchButton svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .searchInput {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .searchButton {
+    width: 48px;
+    height: 42px;
+    min-width: 48px;
+  }
+}
+

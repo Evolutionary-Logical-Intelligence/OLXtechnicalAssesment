@@ -142,3 +142,80 @@
   margin-top: 0;
 }
 
+@media (max-width: 768px) {
+  .profileIcon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .profileIcon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .proBadge {
+    font-size: 9px;
+    padding: 1px 4px;
+    top: -2px;
+    right: -2px;
+  }
+
+  .dropdownMenu {
+    right: 0;
+    left: auto;
+    min-width: 200px;
+    max-width: calc(100vw - 16px);
+  }
+
+  .menuItem {
+    padding: 14px 16px;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+
+  .profileHeader {
+    padding: 14px;
+  }
+
+  .profileIconSmall {
+    width: 44px;
+    height: 44px;
+  }
+
+  .profileIconSmall svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profileIcon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .profileIcon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .dropdownMenu {
+    min-width: 180px;
+    max-width: calc(100vw - 8px);
+  }
+
+  .menuItem {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .profileHeader {
+    padding: 12px;
+  }
+
+  .profileIconSmall {
+    width: 40px;
+    height: 40px;
+  }
+}
+

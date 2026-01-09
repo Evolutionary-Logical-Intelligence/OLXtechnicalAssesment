@@ -93,3 +93,52 @@
   border-radius: 0 0 4px 4px;
 }
 
+@media (max-width: 768px) {
+  .locationDropdown {
+    width: 100%;
+  }
+
+  .locationButton {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 16px;
+    justify-content: space-between;
+  }
+
+  .locationIcon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .locationText {
+    flex: 1;
+    text-align: left;
+  }
+
+  .dropdownMenu {
+    width: 100%;
+    left: 0;
+    right: 0;
+    min-width: auto;
+    max-height: 50vh;
+  }
+
+  .dropdownItem {
+    padding: 14px 16px;
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+}
+
+@media (max-width: 480px) {
+  .locationButton {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  .dropdownItem {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+}
+
