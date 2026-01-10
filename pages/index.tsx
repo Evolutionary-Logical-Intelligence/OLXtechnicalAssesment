@@ -2,8 +2,40 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import CategoryNavigation from '../components/CategoryNavigation';
 import BannerCarousel from '../components/BannerCarousel';
+import bannerSmallStyles from '../components/BannerCarouselSmall.module.css';
 
 export default function Home() {
+  const mainBannerSlides = [
+    {
+      id: '1',
+      imageUrl: '/banners/carouselImage1.jpeg',
+      alt: 'Promotional banner 1',
+    },
+    {
+      id: '2',
+      imageUrl: '/banners/carouselImage2.jpg',
+      alt: 'Promotional banner 2',
+    },
+    {
+      id: '3',
+      imageUrl: '/banners/carouselImage3.png',
+      alt: 'Promotional banner 3',
+    },
+  ];
+
+  const smallBannerSlides = [
+    {
+      id: '1',
+      imageUrl: '/promoBanners/promoImage1.jpeg',
+      alt: 'Small banner 1',
+    },
+    {
+      id: '2',
+      imageUrl: '/promoBanners/promoImage2.jpeg',
+      alt: 'Small banner 2',
+    }
+  ];
+
   return (
     <>
       <Head>
@@ -15,7 +47,10 @@ export default function Home() {
       <main className={styles.main}>
         <CategoryNavigation />
         <div className={styles.bannerWrapper}>
-          <BannerCarousel />
+          <BannerCarousel slides={mainBannerSlides} />
+        </div>
+        <div className={styles.bannerWrapper}>
+          <BannerCarousel customStyles={bannerSmallStyles} slides={smallBannerSlides} />
         </div>
         <h1>Welcome to OLX</h1>
       </main>

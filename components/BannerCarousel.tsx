@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styles from './BannerCarousel.module.css';
+import defaultStyles from './BannerCarousel.module.css';
 
 interface BannerSlide {
   id: string;
@@ -7,11 +7,20 @@ interface BannerSlide {
   alt: string;
 }
 
-const BannerCarousel: React.FC = () => {
+interface BannerCarouselProps {
+  customStyles?: typeof defaultStyles;
+  slides?: BannerSlide[];
+}
+
+const BannerCarousel: React.FC<BannerCarouselProps> = ({
+  customStyles,
+  slides: propSlides,
+}) => {
+  const styles = customStyles || defaultStyles;
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
 
-  const slides: BannerSlide[] = [
+  const defaultSlides: BannerSlide[] = [
     {
       id: '1',
       imageUrl: '/banners/carouselImage1.jpeg',
@@ -28,6 +37,8 @@ const BannerCarousel: React.FC = () => {
       alt: 'Promotional banner 3',
     },
   ];
+
+  const slides = propSlides || defaultSlides;
 
   useEffect(() => {
     if (!isAutoPlay) return;
