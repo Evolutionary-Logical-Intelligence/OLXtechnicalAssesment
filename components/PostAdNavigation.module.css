@@ -1,0 +1,114 @@
+.navigation {
+  background-color: white;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navigationContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 56px;
+}
+
+.backButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+
+.backButton:hover {
+  background-color: #f5f5f5;
+}
+
+.backButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoText {
+  font-size: 28px;
+  font-weight: bold;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: -0.5px;
+  text-transform: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.logoO {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background-color: #000;
+  border-radius: 50%;
+  line-height: 24px;
+  text-align: center;
+  color: #000;
+  font-weight: 900;
+  font-size: 0;
+}
+
+@media (max-width: 768px) {
+  .navigationContainer {
+    padding: 0 16px;
+    height: 52px;
+  }
+
+  .backButton {
+    padding: 6px;
+  }
+
+  .backButton svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logoText {
+    font-size: 24px;
+  }
+
+  .logoO {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navigationContainer {
+    padding: 0 12px;
+    height: 48px;
+  }
+
+  .logoText {
+    font-size: 22px;
+  }
+
+  .logoO {
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+  }
+}
+

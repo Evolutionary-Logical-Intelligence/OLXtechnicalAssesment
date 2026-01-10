@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useLanguage } from '../contexts/LanguageContext';
 import LocationDropdown from './LocationDropdown';
 import SearchBar from './SearchBar';
@@ -6,6 +7,7 @@ import ProfileDropdown from './ProfileDropdown';
 import styles from './Navbar.module.css';
 
 export default function Navbar() {
+  const router = useRouter();
   const { translations, toggleLanguage, language } = useLanguage();
   const [selectedLocation, setSelectedLocation] = useState(translations.locations.lebanon);
 
@@ -107,7 +109,11 @@ export default function Navbar() {
           />
 
           {/* Sell Button */}
-          <button className={styles.sellButton} type="button">
+          <button 
+            className={styles.sellButton} 
+            type="button"
+            onClick={() => router.push('/post')}
+          >
             <svg
               width="20"
               height="20"

@@ -1,0 +1,617 @@
+.container {
+  display: flex;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  min-height: 400px;
+  margin-top: 0;
+}
+
+.leftColumn {
+  flex: 1;
+  border-right: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.middleColumn {
+  flex: 1;
+  border-right: 1px solid #e0e0e0;
+  background-color: #ffffff;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.rightColumn {
+  flex: 1;
+  background-color: #ffffff;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+.sectionHeader {
+  display: none;
+  padding: 16px 20px;
+  background-color: #f8f8f8;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  font-family: Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.categoryRow {
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #ffffff;
+}
+
+.categoryRow:hover {
+  background-color: #f5f5f5;
+}
+
+.categoryRow.selected {
+  background-color: rgba(173, 216, 230, 0.3);
+}
+
+.categoryRowContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.categoryIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  object-position: center;
+  flex-shrink: 0;
+}
+
+.categoryName {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
+
+.chevronIcon {
+  flex-shrink: 0;
+  color: #666;
+  width: 16px;
+  height: 16px;
+}
+
+.categoryRow:hover .chevronIcon {
+  color: #333;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 0 20px;
+}
+
+.categoryGroup {
+  position: relative;
+}
+
+.mobileSubCategories {
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out;
+  max-height: 0;
+  opacity: 0;
+  background-color: #f8f8f8;
+}
+
+.mobileSubCategories.expandedContent {
+  display: block;
+  max-height: 5000px;
+  opacity: 1;
+}
+
+.subCategoryGroup {
+  position: relative;
+}
+
+.mobileSubCategoryRow {
+  display: none;
+  padding: 14px 20px 14px 50px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #f8f8f8;
+  border-left: 2px solid #e0e0e0;
+  min-height: 48px;
+}
+
+.mobileSubCategoryRow.expanded {
+  background-color: rgba(173, 216, 230, 0.2);
+  border-left-color: #4a90e2;
+}
+
+.mobileSubItems {
+  display: none;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out;
+  max-height: 0;
+  opacity: 0;
+  background-color: #fafafa;
+}
+
+.mobileSubItems.expandedContent {
+  display: block;
+  max-height: 5000px;
+  opacity: 1;
+}
+
+.mobileSubItemRow {
+  display: none;
+  padding: 12px 20px 12px 100px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #ffffff;
+  border-left: 2px solid #e0e0e0;
+}
+
+.categoryRow.expanded .chevronIcon {
+  transform: rotate(90deg);
+}
+
+.chevronExpanded {
+  transform: rotate(90deg);
+}
+
+.chevronIcon {
+  transition: transform 0.25s ease;
+}
+
+.subCategoryRow {
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #ffffff;
+}
+
+.subCategoryRow:hover {
+  background-color: #f5f5f5;
+}
+
+.subCategoryRow.selected {
+  background-color: rgba(173, 216, 230, 0.3);
+}
+
+.subCategoryRowContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.subCategoryName {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
+
+.subCategoryRow .chevronIcon {
+  flex-shrink: 0;
+  color: #666;
+  width: 16px;
+  height: 16px;
+}
+
+.subCategoryRow:hover .chevronIcon {
+  color: #333;
+}
+
+.subItemRow {
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  background-color: #ffffff;
+}
+
+.subItemRow:hover {
+  background-color: #f5f5f5;
+}
+
+.subItemRowContent {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.subItemName {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
+
+.emptyState {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.loading,
+.error {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    flex-direction: column;
+    max-width: 100%;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    min-height: 200px;
+  }
+
+  .leftColumn {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .middleColumn {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .categoryRow,
+  .subCategoryRow,
+  .subItemRow {
+    padding: 14px 18px;
+    min-height: 48px;
+  }
+
+  .categoryIcon {
+    width: 22px;
+    height: 22px;
+  }
+
+  .categoryName,
+  .subCategoryName,
+  .subItemName {
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .emptyState,
+  .loading,
+  .error {
+    padding: 32px 18px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    margin-top: 0;
+    flex-direction: column;
+  }
+
+  .sectionHeader {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f8f8;
+  }
+
+  .leftColumn {
+    width: 100%;
+    border-right: none;
+    border-bottom: none;
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  .middleColumn,
+  .rightColumn {
+    display: none !important;
+  }
+
+  .mobileSubCategories {
+    display: block;
+  }
+
+  .mobileSubCategoryRow {
+    display: block;
+  }
+
+  .mobileSubItemRow {
+    display: block;
+  }
+
+  .chevronIcon {
+    transition: transform 0.25s ease;
+  }
+
+  .categoryRow.expanded {
+    background-color: rgba(173, 216, 230, 0.4);
+    border-left: 4px solid #4a90e2;
+    padding-left: 12px;
+  }
+
+  .categoryRow {
+    padding: 16px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .categoryRow:active {
+    background-color: #e8e8e8;
+  }
+
+  .mobileSubCategoryRow:active {
+    background-color: #e0e0e0;
+  }
+
+  .mobileSubItemRow:active {
+    background-color: #f0f0f0;
+  }
+
+  .mobileSubCategoryRow {
+    padding: 14px 20px 14px 50px;
+  }
+
+  .mobileSubItemRow {
+    padding: 12px 20px 12px 80px;
+  }
+
+  .categoryRowContent,
+  .subCategoryRowContent,
+  .subItemRowContent {
+    gap: 14px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .categoryIcon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+
+  .categoryName,
+  .subCategoryName,
+  .subItemName {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .chevronIcon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  .divider {
+    margin: 0 16px;
+    height: 1px;
+  }
+
+  .categoryRow.selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    border-left: 3px solid #4a90e2;
+    padding-left: 13px;
+  }
+
+  .subCategoryRow.selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    border-left: 3px solid #4a90e2;
+    padding-left: 13px;
+  }
+
+  .emptyState,
+  .loading,
+  .error {
+    padding: 40px 16px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin-top: 0;
+    min-height: 200px;
+  }
+
+  .categoryRow {
+    padding: 18px 16px;
+    min-height: 56px;
+    transition: background-color 0.15s ease, padding-left 0.15s ease;
+  }
+
+  .categoryRow:active {
+    background-color: #e0e0e0;
+  }
+
+  .mobileSubCategoryRow {
+    padding: 16px 20px 16px 48px;
+    min-height: 52px;
+  }
+
+  .mobileSubItemRow {
+    padding: 14px 20px 14px 76px;
+    min-height: 48px;
+  }
+
+  .mobileSubCategoryRow:active {
+    background-color: #d8d8d8;
+  }
+
+  .mobileSubItemRow:active {
+    background-color: #e8e8e8;
+  }
+
+  .categoryRowContent,
+  .subCategoryRowContent,
+  .subItemRowContent {
+    gap: 16px;
+    width: 100%;
+  }
+
+  .categoryIcon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .categoryName,
+  .subCategoryName,
+  .subItemName {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .chevronIcon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: #4a90e2;
+  }
+
+  .categoryRow.selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    border-left: 4px solid #4a90e2;
+    padding-left: 12px;
+  }
+
+  .subCategoryRow.selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    border-left: 4px solid #4a90e2;
+    padding-left: 12px;
+  }
+
+  .divider {
+    margin: 0 16px;
+    height: 1px;
+    background-color: #f0f0f0;
+  }
+
+  .emptyState,
+  .loading,
+  .error {
+    padding: 48px 16px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .emptyState {
+    color: #999;
+  }
+
+  .sectionHeader {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+
+  .leftColumn,
+  .middleColumn,
+  .rightColumn {
+    background-color: #fafafa;
+  }
+
+  .leftColumn {
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .middleColumn {
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .categoryRow,
+  .subCategoryRow,
+  .subItemRow {
+    background-color: #ffffff;
+    margin: 0;
+  }
+
+  .categoryRow:hover,
+  .subCategoryRow:hover,
+  .subItemRow:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+/* Additional improvements for very small screens */
+@media (max-width: 360px) {
+  .categoryRow,
+  .subCategoryRow,
+  .subItemRow {
+    padding: 16px 12px;
+    min-height: 52px;
+  }
+
+  .categoryIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .categoryName,
+  .subCategoryName,
+  .subItemName {
+    font-size: 15px;
+  }
+
+  .chevronIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .categoryRowContent,
+  .subCategoryRowContent,
+  .subItemRowContent {
+    gap: 12px;
+  }
+
+  .emptyState,
+  .loading,
+  .error {
+    padding: 40px 12px;
+    font-size: 14px;
+  }
+}
+

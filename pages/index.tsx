@@ -54,7 +54,6 @@ export default function Home() {
           <BannerCarousel customStyles={bannerSmallStyles} slides={smallBannerSlides} />
         </div>
         <CategoriesGrid />
-        <h1>Welcome to OLX</h1>
       </main>
     </>
   );

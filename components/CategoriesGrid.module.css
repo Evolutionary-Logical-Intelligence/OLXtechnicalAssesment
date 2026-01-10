@@ -47,8 +47,8 @@
 }
 
 .categoryItem:hover .categoryIconWrapper {
-  border-color: #f8d342;
-  box-shadow: 0 4px 12px rgba(248, 211, 66, 0.2);
+  border-color: #007bff;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
 }
 
 .categoryIcon {
@@ -71,7 +71,7 @@
 }
 
 .categoryItem:hover .categoryLabel {
-  color: #f8d342;
+  color: #007bff;
 }
 
 @media (max-width: 1200px) {
