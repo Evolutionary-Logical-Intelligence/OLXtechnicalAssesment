@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { getNavigationCategories, Category } from '../lib/api';
+import { getNavigationCategories, Category, fetchCategories, ApiCategory } from '../lib/api';
 import styles from './CategoryNavigation.module.css';
 
 interface CategoryNavigationProps {
@@ -12,8 +12,11 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
 }) => {
   const { language } = useLanguage();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<ApiCategory[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -28,6 +31,9 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
         setError(null);
         const fetchedCategories = await getNavigationCategories(language);
         setCategories(fetchedCategories);
+        
+        const allApiCategories = await fetchCategories();
+        setAllCategories(allApiCategories);
       } catch (err) {
         setError('Failed to load categories');
         console.error('Error loading categories:', err);
@@ -40,8 +46,57 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
     loadCategories();
   }, [language, propCategories]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
   const handleCategoryClick = (categoryId: string) => {
-    console.log('Category clicked:', categoryId);
+    if (categoryId === 'all') {
+      setIsDropdownOpen(!isDropdownOpen);
+    } else {
+      console.log('Category clicked:', categoryId);
+    }
+  };
+
+  const handleDropdownCategoryClick = (category: ApiCategory) => {
+    console.log('Dropdown category clicked:', category.id, category.slug);
+    setIsDropdownOpen(false);
+  };
+
+  const renderCategoryItem = (category: ApiCategory, level: number = 0) => {
+    const name = language === 'ar' ? category.name_l1 : category.name;
+    const hasChildren = category.children && category.children.length > 0;
+    
+    return (
+      <div key={category.id} className={styles.dropdownCategoryItem} data-level={level}>
+        <button
+          className={styles.dropdownCategoryButton}
+          onClick={() => handleDropdownCategoryClick(category)}
+          type="button"
+        >
+          <span>{name}</span>
+        </button>
+        {hasChildren && (
+          <div className={styles.dropdownSubcategories}>
+            {category.children
+              .sort((a, b) => a.displayPriority - b.displayPriority)
+              .map((child) => renderCategoryItem(child, level + 1))}
+          </div>
+        )}
+      </div>
+    );
   };
 
   const formatCategoryText = (text: string) => {
@@ -67,19 +122,19 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   const otherCategories = categories.filter(cat => !cat.hasDropdown);
 
   return (
-    <nav className={styles.categoryNav} aria-label="Category Navigation">
+    <nav className={styles.categoryNav} aria-label="Category Navigation" ref={dropdownRef}>
       <div className={styles.navWrapper}>
         {allCategoriesItem && (
           <div className={styles.fixedCategory}>
             <button
-              className={`${styles.categoryItem} ${styles.hasDropdown}`}
+              className={`${styles.categoryItem} ${styles.hasDropdown} ${isDropdownOpen ? styles.isOpen : ''}`}
               type="button"
               onClick={() => handleCategoryClick(allCategoriesItem.id)}
               aria-label={allCategoriesItem.label}
             >
               {formatCategoryText(allCategoriesItem.label)}
               <svg
-                className={styles.dropdownIcon}
+                className={`${styles.dropdownIcon} ${isDropdownOpen ? styles.iconRotated : ''}`}
                 width="12"
                 height="12"
                 viewBox="0 0 12 12"
@@ -114,6 +169,16 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
           </div>
         </div>
       </div>
+      {isDropdownOpen && (
+        <div className={styles.dropdownMenu}>
+          <div className={styles.dropdownContent}>
+            {allCategories
+              .filter(cat => cat.level === 0 && cat.parentID === null)
+              .sort((a, b) => a.displayPriority - b.displayPriority)
+              .map((category) => renderCategoryItem(category))}
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

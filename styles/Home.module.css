@@ -5,6 +5,25 @@
   flex-direction: column;
 }
 
+.bannerWrapper {
+  width: 100%;
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .bannerWrapper {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .bannerWrapper {
+    padding: 12px;
+  }
+}
+
 .main > h1 {
   padding: 40px 24px;
   text-align: center;
