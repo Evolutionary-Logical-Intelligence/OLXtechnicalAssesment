@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.css';
 import CategoryNavigation from '../components/CategoryNavigation';
 import BannerCarousel from '../components/BannerCarousel';
 import bannerSmallStyles from '../components/BannerCarouselSmall.module.css';
+import CategoriesGrid from '../components/CategoriesGrid';
 
 export default function Home() {
   const mainBannerSlides = [
@@ -52,6 +53,7 @@ export default function Home() {
         <div className={styles.bannerWrapper}>
           <BannerCarousel customStyles={bannerSmallStyles} slides={smallBannerSlides} />
         </div>
+        <CategoriesGrid />
         <h1>Welcome to OLX</h1>
       </main>
     </>

@@ -1,0 +1,140 @@
+.categoriesGridContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 24px;
+  justify-items: center;
+}
+
+.categoryItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 100%;
+  max-width: 140px;
+}
+
+.categoryItem:hover {
+  transform: translateY(-4px);
+}
+
+.categoryItem:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.categoryIconWrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.categoryItem:hover .categoryIconWrapper {
+  border-color: #f8d342;
+  box-shadow: 0 4px 12px rgba(248, 211, 66, 0.2);
+}
+
+.categoryIcon {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.categoryLabel {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.3;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+.categoryItem:hover .categoryLabel {
+  color: #f8d342;
+}
+
+@media (max-width: 1200px) {
+  .categoriesGridContainer {
+    padding: 24px 16px;
+  }
+
+  .categoriesGrid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+  }
+
+  .categoryIconWrapper {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .categoriesGridContainer {
+    padding: 20px 12px;
+  }
+
+  .categoriesGrid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .categoryItem {
+    max-width: 120px;
+  }
+
+  .categoryIconWrapper {
+    width: 90px;
+    height: 90px;
+  }
+
+  .categoryLabel {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categoriesGridContainer {
+    padding: 16px 8px;
+  }
+
+  .categoriesGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .categoryItem {
+    max-width: 100px;
+  }
+
+  .categoryIconWrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .categoryLabel {
+    font-size: 12px;
+  }
+}
+
