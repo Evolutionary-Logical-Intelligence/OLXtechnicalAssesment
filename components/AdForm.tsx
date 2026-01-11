@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fetchCategoryFields, CategoryField, ApiCategory, FieldChoice } from '../lib/api';
 import styles from './AdForm.module.css';
-
+import Image from 'next/Image'; 
 interface AdFormProps {
   categorySlug: string;
   selectedCategory: ApiCategory | null;
@@ -125,7 +125,7 @@ const AdForm: React.FC<AdFormProps> = ({
     const remainingSlots = maxImages - uploadedImages.length;
 
     Array.from(files).slice(0, remainingSlots).forEach((file) => {
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith('Image/')) {
         const reader = new FileReader();
         reader.onload = (e) => {
           const result = e.target?.result as string;
@@ -145,7 +145,7 @@ const AdForm: React.FC<AdFormProps> = ({
 
   const handleImageClick = (index: number) => {
     if (uploadedImages[index]) {
-      // If image exists, allow removing it
+      // If Image exists, allow removing it
       setUploadedImages((prev) => prev.filter((_, i) => i !== index));
     } else {
       // If empty slot, trigger file input
@@ -561,7 +561,8 @@ const AdForm: React.FC<AdFormProps> = ({
           <div className={styles.categoryDisplay}>
             <div className={styles.categoryInfo}>
               <div className={styles.categoryIconWrapper}>
-                <img
+                {/* eslint-disable-next-line @next/next/no-Image-element */}
+                <Image
                   src={categoryIconUrl}
                   alt={categoryMainName}
                   className={styles.categoryIcon}
@@ -596,18 +597,18 @@ const AdForm: React.FC<AdFormProps> = ({
           <input
             ref={fileInputRef}
             type="file"
-            accept="image/*"
+            accept="Image/*"
             multiple
             onChange={handleImageUpload}
             className={styles.hiddenFileInput}
-            aria-label="Upload images"
+            aria-label="Upload Images"
           />
-          <div className={styles.imageUploadGrid}>
+          <div className={styles.ImageUploadGrid}>
             {uploadedImages.length < 12 && (
               <button 
                 type="button" 
-                className={styles.imageUploadButton}
-                aria-label="Add image"
+                className={styles.ImageUploadButton}
+                aria-label="Add Image"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <svg
@@ -627,24 +628,25 @@ const AdForm: React.FC<AdFormProps> = ({
               </button>
             )}
             {Array.from({ length: 12 }).map((_, index) => {
-              const imageUrl = uploadedImages[index];
-              if (index === 0 && !imageUrl && uploadedImages.length === 0) {
-                // First slot shows upload button if no images
+              const ImageUrl = uploadedImages[index];
+              if (index === 0 && !ImageUrl && uploadedImages.length === 0) {
+                // First slot shows upload button if no Images
                 return null;
               }
-              if (imageUrl) {
+              if (ImageUrl) {
                 return (
-                  <div key={index} className={styles.imagePreviewContainer}>
-                    <img
-                      src={imageUrl}
+                  <div key={index} className={styles.ImagePreviewContainer}>
+                    {/* eslint-disable-next-line @next/next/no-Image-element */}
+                    <Image
+                      src={ImageUrl}
                       alt={`Upload ${index + 1}`}
-                      className={styles.imagePreview}
+                      className={styles.ImagePreview}
                     />
                     <button
                       type="button"
-                      className={styles.imageRemoveButton}
+                      className={styles.ImageRemoveButton}
                       onClick={() => handleRemoveImage(index)}
-                      aria-label={`Remove image ${index + 1}`}
+                      aria-label={`Remove Image ${index + 1}`}
                     >
                       <svg
                         width="16"
@@ -667,7 +669,7 @@ const AdForm: React.FC<AdFormProps> = ({
                 <button 
                   key={index} 
                   type="button" 
-                  className={styles.imageSlot}
+                  className={styles.ImageSlot}
                   aria-label={`Image slot ${index + 1}`}
                   onClick={() => fileInputRef.current?.click()}
                 >
@@ -690,7 +692,7 @@ const AdForm: React.FC<AdFormProps> = ({
               );
             })}
           </div>
-          <div className={styles.imageHint}>
+          <div className={styles.ImageHint}>
             For the cover picture we recommend using the landscape mode.
           </div>
         </div>
