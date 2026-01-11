@@ -82,6 +82,8 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
               src={slide.imageUrl}
               alt={slide.alt}
               className={styles.slideImage}
+              fill
+              sizes="100vw"
             />
           </div>
         ))}

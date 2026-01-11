@@ -251,6 +251,8 @@ const CategoryBrowser: React.FC<CategoryBrowserProps> = ({
                     src={iconUrl}
                     alt={categoryName}
                     className={styles.categoryIcon}
+                    width={24}
+                    height={24}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/categoryIcons/vehicle.png';

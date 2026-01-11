@@ -81,9 +81,11 @@ const CategoriesGrid: React.FC = () => {
           >
             <div className={styles.categoryIconWrapper}>
               <Image
-                src={category.iconUrl}
+                src={category.iconUrl || '/categoryIcons/vehicle.png'}
                 alt={category.name}
                 className={styles.categoryIcon}
+                fill
+                sizes="(max-width: 480px) 80px, (max-width: 768px) 90px, (max-width: 1200px) 100px, 120px"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.src = '/categoryIcons/vehicle.png';

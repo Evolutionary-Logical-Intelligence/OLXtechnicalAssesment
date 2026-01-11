@@ -98,9 +98,11 @@ const CategorySelection: React.FC = () => {
             <div className={styles.cardContent}>
               <div className={styles.iconWrapper}>
                 <Image
-                  src={category.iconUrl}
+                  src={category.iconUrl || '/categoryIcons/vehicle.png'}
                   alt={category.name}
                   className={styles.categoryIcon}
+                  width={60}
+                  height={60}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/categoryIcons/vehicle.png';

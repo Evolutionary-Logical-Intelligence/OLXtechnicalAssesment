@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fetchCategoryFields, CategoryField, ApiCategory, FieldChoice } from '../lib/api';
 import styles from './AdForm.module.css';
-import Image from 'next/Image'; 
+import Image from 'next/image'; 
 interface AdFormProps {
   categorySlug: string;
   selectedCategory: ApiCategory | null;
@@ -566,6 +566,8 @@ const AdForm: React.FC<AdFormProps> = ({
                   src={categoryIconUrl}
                   alt={categoryMainName}
                   className={styles.categoryIcon}
+                  width={48}
+                  height={48}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = '/categoryIcons/vehicle.png';
@@ -641,6 +643,8 @@ const AdForm: React.FC<AdFormProps> = ({
                       src={ImageUrl}
                       alt={`Upload ${index + 1}`}
                       className={styles.ImagePreview}
+                      fill
+                      sizes="(max-width: 768px) 50vw, 33vw"
                     />
                     <button
                       type="button"
