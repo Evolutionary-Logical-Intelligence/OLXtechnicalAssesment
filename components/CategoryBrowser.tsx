@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fetchCategories, ApiCategory } from '../lib/api';
 import styles from './CategoryBrowser.module.css';
-
+import Image from 'next/image'; 
 interface CategoryBrowserProps {
   selectedCategoryId: number | null;
   onCategorySelect?: (categoryId: number) => void;
@@ -247,7 +247,7 @@ const CategoryBrowser: React.FC<CategoryBrowserProps> = ({
                 }}
               >
                 <div className={styles.categoryRowContent}>
-                  <img
+                  <Image
                     src={iconUrl}
                     alt={categoryName}
                     className={styles.categoryIcon}

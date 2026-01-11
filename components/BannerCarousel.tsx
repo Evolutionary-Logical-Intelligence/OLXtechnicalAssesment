@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import defaultStyles from './BannerCarousel.module.css';
-
+import Image from 'next/image'; 
 interface BannerSlide {
   id: string;
   imageUrl: string;
@@ -78,7 +78,7 @@ const BannerCarousel: React.FC<BannerCarouselProps> = ({
               index === currentSlide ? styles.active : ''
             }`}
           >
-            <img
+            <Image
               src={slide.imageUrl}
               alt={slide.alt}
               className={styles.slideImage}

@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fetchCategories, ApiCategory } from '../lib/api';
 import styles from './CategorySelection.module.css';
-
+import Image from 'next/image'; 
 interface CategoryItem {
   id: number;
   name: string;
@@ -97,7 +97,7 @@ const CategorySelection: React.FC = () => {
           >
             <div className={styles.cardContent}>
               <div className={styles.iconWrapper}>
-                <img
+                <Image
                   src={category.iconUrl}
                   alt={category.name}
                   className={styles.categoryIcon}

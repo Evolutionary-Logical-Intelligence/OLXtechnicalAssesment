@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fetchCategories, ApiCategory } from '../lib/api';
 import styles from './CategoriesGrid.module.css';
-
+import Image from 'next/image'; 
 interface CategoryItem {
   id: number;
   name: string;
@@ -80,7 +80,7 @@ const CategoriesGrid: React.FC = () => {
             }}
           >
             <div className={styles.categoryIconWrapper}>
-              <img
+              <Image
                 src={category.iconUrl}
                 alt={category.name}
                 className={styles.categoryIcon}
