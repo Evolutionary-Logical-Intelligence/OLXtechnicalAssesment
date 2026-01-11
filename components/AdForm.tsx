@@ -41,7 +41,6 @@ const AdForm: React.FC<AdFormProps> = ({
         setLoading(true);
         setError(null);
         
-        // Log API URL
         const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://www.olx.com.lb';
         const apiUrl = `${baseUrl}/api/categoryFields?categorySlugs=${categorySlug}&includeChildCategories=true&splitByCategoryIDs=true&flatChoices=true&groupChoicesBySection=true&flat=true`;
         console.log('API URL:', apiUrl);
@@ -700,10 +699,8 @@ const AdForm: React.FC<AdFormProps> = ({
         </div>
       </div>
 
-      {/* Border after Upload Images */}
       <div className={styles.sectionBorder}></div>
 
-      {/* Brand Field - Always show, from API or global */}
       {(() => {
         const brandField = fields.find(f => f.attribute === 'make' || f.attribute === 'brand');
         const brandChoices = brandField?.choices || [];
@@ -716,7 +713,6 @@ const AdForm: React.FC<AdFormProps> = ({
           }
         }
         
-        // Fallback Brand field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>
@@ -746,10 +742,8 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Border after Brand */}
       <div className={styles.sectionBorder}></div>
 
-      {/* Model Field - Always show, from API or global */}
       {(() => {
         const modelField = visibleFields.find(f => f.attribute === 'model');
         const fieldValue = formData.model || '';
@@ -771,13 +765,11 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Condition Field - Always show, from API or global */}
       {(() => {
         const conditionField = visibleFields.find(f => f.attribute === 'new_used' || f.attribute === 'condition');
         if (conditionField) {
           return renderField(conditionField);
         }
-        // Global Condition field if not in API
         const conditionValue = formData.condition || formData.new_used || '';
         return (
           <div className={styles.formField}>
@@ -800,7 +792,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Storage Field - Always show, from API or global */}
       {(() => {
         const storageField = fields.find(f => f.attribute === 'storage');
         const storageChoices = storageField?.choices || [];
@@ -813,7 +804,6 @@ const AdForm: React.FC<AdFormProps> = ({
           }
         }
         
-        // Fallback Storage field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>Storage</label>
@@ -839,7 +829,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Color Field - Always show, from API or global */}
       {(() => {
         const colorField = fields.find(f => f.attribute === 'color');
         const colorChoices = colorField?.choices || [];
@@ -852,7 +841,6 @@ const AdForm: React.FC<AdFormProps> = ({
           }
         }
         
-        // Fallback Color field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>Color</label>
@@ -878,7 +866,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Ad Title Field - Always show, global */}
       {(() => {
         const titleField = visibleFields.find(f => f.attribute === 'title');
         const fieldValue = formData.title || '';
@@ -910,7 +897,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Description Field - Always show, global */}
       {(() => {
         const descField = visibleFields.find(f => f.attribute === 'description');
         const fieldValue = formData.description || '';
@@ -942,7 +928,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Location Field */}
       <div className={styles.formField}>
         <label className={styles.fieldLabel}>
           Location
@@ -977,10 +962,8 @@ const AdForm: React.FC<AdFormProps> = ({
         </div>
       </div>
 
-      {/* Border after Location */}
       <div className={styles.sectionBorder}></div>
 
-      {/* Price Field - Always show, from API or global */}
       {(() => {
         const priceField = visibleFields.find(f => f.attribute === 'price');
         const priceValue = formData.price || '';
@@ -1025,7 +1008,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       })()}
 
-      {/* Optional Price Field - Always show, from API or global */}
       {(() => {
         const secondaryPriceField = visibleFields.find(f => f.attribute === 'secondary_price');
         const secondaryPriceValue = formData.secondary_price || '';
@@ -1047,7 +1029,6 @@ const AdForm: React.FC<AdFormProps> = ({
                   max={maxValue || undefined}
                 />
               </div>
-              {/* Price Type Checkboxes - Negotiable, Exchange, Free */}
               <div className={styles.checkboxGroup}>
                 {(() => {
                   const priceTypeField = visibleFields.find(f => f.attribute === 'price_type');
