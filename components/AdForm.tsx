@@ -47,7 +47,6 @@ const AdForm: React.FC<AdFormProps> = ({
         
         const response = await fetchCategoryFields(categorySlug);
         
-        // Log full API response
         console.log('API Response:', response);
         
         const categoryKey = Object.keys(response)[0];
@@ -55,7 +54,6 @@ const AdForm: React.FC<AdFormProps> = ({
           const categoryData = response[categoryKey];
           const flatFields = categoryData.flatFields || [];
           
-          // Debug logging
           console.log('Total fields loaded:', flatFields.length);
           const storageField = flatFields.find(f => f.attribute === 'storage');
           const colorField = flatFields.find(f => f.attribute === 'color');
@@ -104,7 +102,6 @@ const AdForm: React.FC<AdFormProps> = ({
       [attribute]: value,
     }));
 
-    // Clear dependent fields when parent changes
     const dependentField = parentFieldLookup[attribute];
     if (dependentField && formData[dependentField]) {
       setFormData((prev) => {
@@ -136,7 +133,6 @@ const AdForm: React.FC<AdFormProps> = ({
       }
     });
 
-    // Reset input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -144,10 +140,8 @@ const AdForm: React.FC<AdFormProps> = ({
 
   const handleImageClick = (index: number) => {
     if (uploadedImages[index]) {
-      // If Image exists, allow removing it
       setUploadedImages((prev) => prev.filter((_, i) => i !== index));
     } else {
-      // If empty slot, trigger file input
       fileInputRef.current?.click();
     }
   };
@@ -156,7 +150,6 @@ const AdForm: React.FC<AdFormProps> = ({
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Handle click outside to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
@@ -173,7 +166,6 @@ const AdForm: React.FC<AdFormProps> = ({
       });
 
       if (!clickedInside) {
-        // Close all open dropdowns
         setOpenDropdowns((prev) => {
           const newState: Record<string, boolean> = {};
           let hasChanges = false;
@@ -190,7 +182,6 @@ const AdForm: React.FC<AdFormProps> = ({
 
     const hasOpenDropdowns = Object.values(openDropdowns).some((isOpen) => isOpen);
     if (hasOpenDropdowns) {
-      // Use setTimeout to allow onClick to fire first
       const timeoutId = setTimeout(() => {
         document.addEventListener('click', handleClickOutside, true);
       }, 0);
@@ -262,7 +253,6 @@ const AdForm: React.FC<AdFormProps> = ({
     const isRequired = field.isMandatory;
     const fieldValue = formData[field.attribute];
 
-    // Handle different field types
     if (field.valueType === 'enum' && field.filterType === 'single_choice') {
       const choices = getFieldChoices(field, formData[parentFieldLookup[field.attribute] || '']);
       const hasChoices = choices && Array.isArray(choices) && choices.length > 0;
@@ -299,7 +289,6 @@ const AdForm: React.FC<AdFormProps> = ({
     if ((field.valueType === 'enum' || field.valueType === 'enum_multiple') && field.filterType === 'multiple_choice') {
       const choices = field.choices || [];
       
-      // Button group for single selection (like condition)
       if (field.attribute === 'new_used' || field.attribute === 'condition') {
         return (
           <div key={field.id} className={styles.formField}>
@@ -325,7 +314,6 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       }
 
-      // Checkboxes for multiple selection (like price_type, features)
       return (
         <div key={field.id} className={styles.formField}>
           <label className={styles.fieldLabel}>
@@ -359,7 +347,6 @@ const AdForm: React.FC<AdFormProps> = ({
     }
 
     if (field.valueType === 'float' || field.valueType === 'integer') {
-      // Special handling for price fields
       if (field.attribute === 'price') {
         return (
           <div key={field.id} className={styles.formField}>
@@ -590,7 +577,6 @@ const AdForm: React.FC<AdFormProps> = ({
         </div>
       </div>
 
-      {/* Upload Images Section */}
       <div className={styles.formSection}>
         <label className={styles.fieldLabel}>Upload Images</label>
         <div className={styles.fieldInputWrapper}>
@@ -630,7 +616,6 @@ const AdForm: React.FC<AdFormProps> = ({
             {Array.from({ length: 12 }).map((_, index) => {
               const ImageUrl = uploadedImages[index];
               if (index === 0 && !ImageUrl && uploadedImages.length === 0) {
-                // First slot shows upload button if no Images
                 return null;
               }
               if (ImageUrl) {
