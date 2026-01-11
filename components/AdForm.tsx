@@ -561,7 +561,6 @@ const AdForm: React.FC<AdFormProps> = ({
           <div className={styles.categoryDisplay}>
             <div className={styles.categoryInfo}>
               <div className={styles.categoryIconWrapper}>
-                {/* eslint-disable-next-line @next/next/no-Image-element */}
                 <Image
                   src={categoryIconUrl}
                   alt={categoryMainName}
@@ -638,7 +637,6 @@ const AdForm: React.FC<AdFormProps> = ({
               if (ImageUrl) {
                 return (
                   <div key={index} className={styles.ImagePreviewContainer}>
-                    {/* eslint-disable-next-line @next/next/no-Image-element */}
                     <Image
                       src={ImageUrl}
                       alt={`Upload ${index + 1}`}
