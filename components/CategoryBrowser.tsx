@@ -182,16 +182,27 @@ const CategoryBrowser: React.FC<CategoryBrowserProps> = ({
         setSelectedSubCategory(category);
       }
     } else {
-      // No children - handle final selection
-      console.log('Final sub-category selected:', category.id, category.slug);
-      // TODO: Navigate to next step in post ad flow
+      // No children - navigate to create page
+      const queryParams = new URLSearchParams();
+      if (selectedCategoryId) {
+        queryParams.set('categoryId', selectedCategoryId.toString());
+      }
+      queryParams.set('subCategoryId', category.id.toString());
+      router.push(`/post/create?${queryParams.toString()}`);
     }
   };
 
   const handleSubItemClick = (subItem: ApiCategory) => {
-    // Handle sub-item selection (final level)
-    console.log('Sub-item selected:', subItem.id, subItem.slug);
-    // TODO: Navigate to next step in post ad flow
+    // Sub-items are always final level - navigate to create page
+    const queryParams = new URLSearchParams();
+    if (selectedCategoryId) {
+      queryParams.set('categoryId', selectedCategoryId.toString());
+    }
+    if (selectedSubCategoryId) {
+      queryParams.set('subCategoryId', selectedSubCategoryId.toString());
+    }
+    queryParams.set('subItemId', subItem.id.toString());
+    router.push(`/post/create?${queryParams.toString()}`);
   };
 
   if (loading) {

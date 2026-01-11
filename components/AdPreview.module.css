@@ -1,0 +1,126 @@
+.helpContainer {
+  width: 100%;
+  background-color: transparent;
+}
+
+.helpCard {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 24px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.helpHeading {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin: 0 0 16px 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.helpIntro {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.helpList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px 0;
+}
+
+.helpList li {
+  margin-bottom: 12px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.helpList li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.helpLink {
+  color: #0066cc;
+  text-decoration: underline;
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.helpLink:hover {
+  color: #0052a3;
+}
+
+.helpLink:active {
+  color: #003d7a;
+}
+
+.helpFooter {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (max-width: 768px) {
+  .helpCard {
+    padding: 20px;
+  }
+
+  .helpHeading {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .helpIntro {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+
+  .helpLink {
+    font-size: 13px;
+  }
+
+  .helpFooter {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .helpCard {
+    padding: 16px;
+  }
+
+  .helpHeading {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .helpIntro {
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+
+  .helpList li {
+    margin-bottom: 10px;
+  }
+
+  .helpLink {
+    font-size: 12px;
+  }
+
+  .helpFooter {
+    font-size: 12px;
+  }
+}
+

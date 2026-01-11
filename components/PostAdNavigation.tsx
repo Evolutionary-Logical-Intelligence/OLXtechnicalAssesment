@@ -6,7 +6,9 @@ const PostAdNavigation: React.FC = () => {
   const router = useRouter();
 
   const handleBackClick = () => {
-    if (router.pathname === '/post/category/[categoryId]' || router.asPath.startsWith('/post/category/')) {
+    if (router.pathname === '/post/create') {
+      router.push('/post');
+    } else if (router.pathname === '/post/category/[categoryId]' || router.asPath.startsWith('/post/category/')) {
       router.push('/post');
     } else if (router.pathname === '/post') {
       router.push('/');
@@ -40,8 +42,7 @@ const PostAdNavigation: React.FC = () => {
         </button>
         <div className={styles.logo}>
           <span className={styles.logoText}>
-            <span className={styles.logoO}>O</span>
-            <span>lx</span>
+            <span>Olx</span>
           </span>
         </div>
       </div>

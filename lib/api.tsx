@@ -106,3 +106,83 @@ export const getNavigationCategories = async (
   }
 };
 
+// Category Fields API Types
+export interface FieldChoice {
+  value: string;
+  label: string;
+  label_l1?: string;
+  slug?: string;
+  seoSlug?: {
+    en: string;
+    ar: string;
+  };
+  id: number;
+  displayPriority: number;
+  popularityRank: number;
+  roles: string[];
+  parentID?: number;
+}
+
+export interface CategoryField {
+  id: number;
+  valueType: 'enum' | 'float' | 'string' | 'integer';
+  roles: string[];
+  attribute: string;
+  categoryID: number;
+  groupIndex: number | null;
+  maxFieldFacetSize: number | null;
+  seoTitle: {
+    en: string;
+    ar: string;
+  };
+  paaSection: unknown;
+  name: string;
+  filterType: 'range' | 'single_choice' | 'multiple_choice' | 'text';
+  isMandatory: boolean;
+  state: string;
+  displayPriority: number;
+  titlePriority: number;
+  minValue: number | null;
+  maxValue: number | null;
+  minLength: number | null;
+  maxLength: number | null;
+  choices?: FieldChoice[];
+  childrenFields?: Record<string, FieldChoice[]>;
+  parentFieldLookup?: Record<string, string>;
+}
+
+export interface CategoryFieldsResponse {
+  [categoryId: string]: {
+    flatFields: CategoryField[];
+    childrenFields?: Record<string, Record<string, FieldChoice[]>> | Record<string, FieldChoice[]>;
+    parentFieldLookup?: Record<string, string>;
+  };
+}
+
+export const fetchCategoryFields = async (
+  categorySlug: string
+): Promise<CategoryFieldsResponse> => {
+  try {
+    const baseUrl = getApiBaseUrl();
+    const response = await fetch(
+      `${baseUrl}/api/categoryFields?categorySlugs=${categorySlug}&includeChildCategories=true&splitByCategoryIDs=true&flatChoices=true&groupChoicesBySection=true&flat=true`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch category fields: ${response.statusText}`);
+    }
+
+    const data: CategoryFieldsResponse = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching category fields:', error);
+    throw error;
+  }
+};
+
