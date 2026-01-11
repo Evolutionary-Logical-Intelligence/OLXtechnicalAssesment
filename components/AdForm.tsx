@@ -25,6 +25,10 @@ const AdForm: React.FC<AdFormProps> = ({
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [childrenFields, setChildrenFields] = useState<Record<string, Record<string, FieldChoice[]>>>({});
   const [parentFieldLookup, setParentFieldLookup] = useState<Record<string, string>>({});
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({});
+  const dropdownRefs = React.useRef<Record<string, HTMLDivElement | null>>({});
 
   useEffect(() => {
     const loadFields = async () => {
@@ -36,12 +40,41 @@ const AdForm: React.FC<AdFormProps> = ({
       try {
         setLoading(true);
         setError(null);
+        
+        // Log API URL
+        const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://www.olx.com.lb';
+        const apiUrl = `${baseUrl}/api/categoryFields?categorySlugs=${categorySlug}&includeChildCategories=true&splitByCategoryIDs=true&flatChoices=true&groupChoicesBySection=true&flat=true`;
+        console.log('API URL:', apiUrl);
+        
         const response = await fetchCategoryFields(categorySlug);
+        
+        // Log full API response
+        console.log('API Response:', response);
         
         const categoryKey = Object.keys(response)[0];
         if (categoryKey && response[categoryKey]) {
           const categoryData = response[categoryKey];
-          setFields(categoryData.flatFields || []);
+          const flatFields = categoryData.flatFields || [];
+          
+          // Debug logging
+          console.log('Total fields loaded:', flatFields.length);
+          const storageField = flatFields.find(f => f.attribute === 'storage');
+          const colorField = flatFields.find(f => f.attribute === 'color');
+          const makeField = flatFields.find(f => f.attribute === 'make');
+          console.log('Storage field found:', !!storageField, 'Choices:', storageField?.choices?.length || 0);
+          if (storageField?.choices) {
+            console.log('Storage choices:', storageField.choices);
+          }
+          console.log('Color field found:', !!colorField, 'Choices:', colorField?.choices?.length || 0);
+          if (colorField?.choices) {
+            console.log('Color choices:', colorField.choices);
+          }
+          console.log('Make field found:', !!makeField, 'Choices:', makeField?.choices?.length || 0);
+          if (makeField?.choices) {
+            console.log('Make choices:', makeField.choices);
+          }
+          
+          setFields(flatFields);
           const childrenFieldsData = categoryData.childrenFields || {};
           const nestedChildrenFields: Record<string, Record<string, FieldChoice[]>> = {};
           Object.keys(childrenFieldsData).forEach((key) => {
@@ -81,6 +114,108 @@ const AdForm: React.FC<AdFormProps> = ({
         return updated;
       });
     }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    const newImages: string[] = [];
+    const maxImages = 12;
+    const remainingSlots = maxImages - uploadedImages.length;
+
+    Array.from(files).slice(0, remainingSlots).forEach((file) => {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const result = e.target?.result as string;
+          if (result) {
+            setUploadedImages((prev) => [...prev, result]);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Reset input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const handleImageClick = (index: number) => {
+    if (uploadedImages[index]) {
+      // If image exists, allow removing it
+      setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      // If empty slot, trigger file input
+      fileInputRef.current?.click();
+    }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setUploadedImages((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // Handle click outside to close dropdowns
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      let clickedInside = false;
+
+      Object.keys(openDropdowns).forEach((fieldAttribute) => {
+        if (openDropdowns[fieldAttribute]) {
+          const ref = dropdownRefs.current[fieldAttribute];
+          if (ref && ref.contains(target)) {
+            clickedInside = true;
+            return;
+          }
+        }
+      });
+
+      if (!clickedInside) {
+        // Close all open dropdowns
+        setOpenDropdowns((prev) => {
+          const newState: Record<string, boolean> = {};
+          let hasChanges = false;
+          Object.keys(prev).forEach((key) => {
+            if (prev[key]) {
+              newState[key] = false;
+              hasChanges = true;
+            }
+          });
+          return hasChanges ? newState : prev;
+        });
+      }
+    };
+
+    const hasOpenDropdowns = Object.values(openDropdowns).some((isOpen) => isOpen);
+    if (hasOpenDropdowns) {
+      // Use setTimeout to allow onClick to fire first
+      const timeoutId = setTimeout(() => {
+        document.addEventListener('click', handleClickOutside, true);
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+        document.removeEventListener('click', handleClickOutside, true);
+      };
+    }
+  }, [openDropdowns]);
+
+  const toggleDropdown = (fieldAttribute: string) => {
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [fieldAttribute]: !prev[fieldAttribute],
+    }));
+  };
+
+  const handleChoiceSelect = (fieldAttribute: string, choice: FieldChoice) => {
+    handleFieldChange(fieldAttribute, choice.value);
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [fieldAttribute]: false,
+    }));
   };
 
   const getCategoryMainName = () => {
@@ -131,6 +266,7 @@ const AdForm: React.FC<AdFormProps> = ({
     // Handle different field types
     if (field.valueType === 'enum' && field.filterType === 'single_choice') {
       const choices = getFieldChoices(field, formData[parentFieldLookup[field.attribute] || '']);
+      const hasChoices = choices && Array.isArray(choices) && choices.length > 0;
       
       return (
         <div key={field.id} className={styles.formField}>
@@ -139,34 +275,23 @@ const AdForm: React.FC<AdFormProps> = ({
             {isRequired && <span className={styles.required}>*</span>}
           </label>
           <div className={styles.fieldInputWrapper}>
-            <div className={styles.inputWrapper}>
-              <input
-                type="text"
-                className={styles.textInput}
-                placeholder={`Select ${fieldLabel.toLowerCase()}`}
-                value={fieldValue || ''}
-                readOnly
-                onClick={() => {
-                  console.log('Open selection for:', field.attribute);
-                }}
-              />
-              <svg
-                className={styles.searchIcon}
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </div>
+            <select
+              className={styles.selectInput}
+              value={fieldValue || ''}
+              onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
+              required={isRequired}
+              aria-label={fieldLabel}
+            >
+              <option value="">{`Select ${fieldLabel.toLowerCase()}`}</option>
+              {hasChoices ? choices.map((choice) => {
+                const choiceLabel = language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label;
+                return (
+                  <option key={choice.id || choice.value} value={choice.value}>
+                    {choiceLabel}
+                  </option>
+                );
+              }) : null}
+            </select>
           </div>
         </div>
       );
@@ -421,37 +546,26 @@ const AdForm: React.FC<AdFormProps> = ({
       <div className={styles.formSection}>
         <label className={styles.fieldLabel}>Upload Images</label>
         <div className={styles.fieldInputWrapper}>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className={styles.hiddenFileInput}
+            aria-label="Upload images"
+          />
           <div className={styles.imageUploadGrid}>
-            <button 
-              type="button" 
-              className={styles.imageUploadButton}
-              aria-label="Add image"
-            >
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
-            {Array.from({ length: 11 }).map((_, index) => (
+            {uploadedImages.length < 12 && (
               <button 
-                key={index} 
                 type="button" 
-                className={styles.imageSlot}
-                aria-label={`Image slot ${index + 1}`}
+                className={styles.imageUploadButton}
+                aria-label="Add image"
+                onClick={() => fileInputRef.current?.click()}
               >
                 <svg
-                  width="20"
-                  height="20"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -460,12 +574,74 @@ const AdForm: React.FC<AdFormProps> = ({
                   strokeLinejoin="round"
                   aria-hidden="true"
                 >
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                  <path d="M21 15l-5-5L5 21"></path>
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
               </button>
-            ))}
+            )}
+            {Array.from({ length: 12 }).map((_, index) => {
+              const imageUrl = uploadedImages[index];
+              if (index === 0 && !imageUrl && uploadedImages.length === 0) {
+                // First slot shows upload button if no images
+                return null;
+              }
+              if (imageUrl) {
+                return (
+                  <div key={index} className={styles.imagePreviewContainer}>
+                    <img
+                      src={imageUrl}
+                      alt={`Upload ${index + 1}`}
+                      className={styles.imagePreview}
+                    />
+                    <button
+                      type="button"
+                      className={styles.imageRemoveButton}
+                      onClick={() => handleRemoveImage(index)}
+                      aria-label={`Remove image ${index + 1}`}
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                );
+              }
+              return (
+                <button 
+                  key={index} 
+                  type="button" 
+                  className={styles.imageSlot}
+                  aria-label={`Image slot ${index + 1}`}
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <path d="M21 15l-5-5L5 21"></path>
+                  </svg>
+                </button>
+              );
+            })}
           </div>
           <div className={styles.imageHint}>
             For the cover picture we recommend using the landscape mode.
@@ -478,11 +654,18 @@ const AdForm: React.FC<AdFormProps> = ({
 
       {/* Brand Field - Always show, from API or global */}
       {(() => {
-        const brandField = visibleFields.find(f => f.attribute === 'make' || f.attribute === 'brand');
-        if (brandField) {
-          return renderField(brandField);
+        const brandField = fields.find(f => f.attribute === 'make' || f.attribute === 'brand');
+        const brandChoices = brandField?.choices || [];
+        console.log('Brand field render - Field found:', !!brandField, 'Choices count:', brandChoices.length);
+        
+        if (brandField && brandChoices.length > 0) {
+          const isInVisibleFields = visibleFields.some(f => f.attribute === 'make' || f.attribute === 'brand');
+          if (isInVisibleFields) {
+            return renderField(brandField);
+          }
         }
-        // Global Brand field if not in API
+        
+        // Fallback Brand field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>
@@ -490,34 +673,23 @@ const AdForm: React.FC<AdFormProps> = ({
               <span className={styles.required}>*</span>
             </label>
             <div className={styles.fieldInputWrapper}>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Select brand"
-                  value={formData.brand || formData.make || ''}
-                  readOnly
-                  onClick={() => {
-                    console.log('Open brand selection');
-                  }}
-                />
-                <svg
-                  className={styles.searchIcon}
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+              <select
+                className={styles.selectInput}
+                value={formData.brand || formData.make || ''}
+                onChange={(e) => handleFieldChange('brand', e.target.value)}
+                required
+                aria-label="Brand"
+              >
+                <option value="">Select brand</option>
+                {brandChoices.length > 0 ? brandChoices.map((choice) => {
+                  const choiceLabel = language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label;
+                  return (
+                    <option key={choice.id || choice.value} value={choice.value}>
+                      {choiceLabel}
+                    </option>
+                  );
+                }) : null}
+              </select>
             </div>
           </div>
         );
@@ -579,43 +751,38 @@ const AdForm: React.FC<AdFormProps> = ({
 
       {/* Storage Field - Always show, from API or global */}
       {(() => {
-        const storageField = visibleFields.find(f => f.attribute === 'storage');
-        if (storageField) {
-          return renderField(storageField);
+        const storageField = fields.find(f => f.attribute === 'storage');
+        const storageChoices = storageField?.choices || [];
+        console.log('Storage field render - Field found:', !!storageField, 'Choices count:', storageChoices.length);
+        
+        if (storageField && storageChoices.length > 0) {
+          const isInVisibleFields = visibleFields.some(f => f.attribute === 'storage');
+          if (isInVisibleFields) {
+            return renderField(storageField);
+          }
         }
-        // Global Storage field if not in API
+        
+        // Fallback Storage field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>Storage</label>
             <div className={styles.fieldInputWrapper}>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Select storage"
-                  value={formData.storage || ''}
-                  readOnly
-                  onClick={() => {
-                    console.log('Open storage selection');
-                  }}
-                />
-                <svg
-                  className={styles.searchIcon}
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+              <select
+                className={styles.selectInput}
+                value={formData.storage || ''}
+                onChange={(e) => handleFieldChange('storage', e.target.value)}
+                aria-label="Storage"
+              >
+                <option value="">Select storage</option>
+                {storageChoices.length > 0 ? storageChoices.map((choice) => {
+                  const choiceLabel = language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label;
+                  return (
+                    <option key={choice.id || choice.value} value={choice.value}>
+                      {choiceLabel}
+                    </option>
+                  );
+                }) : null}
+              </select>
             </div>
           </div>
         );
@@ -623,43 +790,38 @@ const AdForm: React.FC<AdFormProps> = ({
 
       {/* Color Field - Always show, from API or global */}
       {(() => {
-        const colorField = visibleFields.find(f => f.attribute === 'color');
-        if (colorField) {
-          return renderField(colorField);
+        const colorField = fields.find(f => f.attribute === 'color');
+        const colorChoices = colorField?.choices || [];
+        console.log('Color field render - Field found:', !!colorField, 'Choices count:', colorChoices.length);
+        
+        if (colorField && colorChoices.length > 0) {
+          const isInVisibleFields = visibleFields.some(f => f.attribute === 'color');
+          if (isInVisibleFields) {
+            return renderField(colorField);
+          }
         }
-        // Global Color field if not in API
+        
+        // Fallback Color field - always render with choices from API
         return (
           <div className={styles.formField}>
             <label className={styles.fieldLabel}>Color</label>
             <div className={styles.fieldInputWrapper}>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="text"
-                  className={styles.textInput}
-                  placeholder="Select color"
-                  value={formData.color || ''}
-                  readOnly
-                  onClick={() => {
-                    console.log('Open color selection');
-                  }}
-                />
-                <svg
-                  className={styles.searchIcon}
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM18 18l-4-4"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
+              <select
+                className={styles.selectInput}
+                value={formData.color || ''}
+                onChange={(e) => handleFieldChange('color', e.target.value)}
+                aria-label="Color"
+              >
+                <option value="">Select color</option>
+                {colorChoices.length > 0 ? colorChoices.map((choice) => {
+                  const choiceLabel = language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label;
+                  return (
+                    <option key={choice.id || choice.value} value={choice.value}>
+                      {choiceLabel}
+                    </option>
+                  );
+                }) : null}
+              </select>
             </div>
           </div>
         );

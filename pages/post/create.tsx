@@ -60,7 +60,21 @@ export default function CreateAdPage() {
   }, [categoryId, subCategoryId, subItemId]);
 
   // Determine which category slug to use (prefer sub-item, then sub-category, then main category)
-  const categorySlug = selectedSubItem?.slug || selectedSubCategory?.slug || selectedCategory?.slug || '';
+  let categorySlug = selectedSubItem?.slug || selectedSubCategory?.slug || selectedCategory?.slug || '';
+  
+  // Ensure mobile phones uses the correct slug
+  if (selectedCategory?.slug === 'mobile-phones' || 
+      selectedSubCategory?.slug === 'mobile-phones' || 
+      selectedSubItem?.slug === 'mobile-phones' ||
+      selectedCategory?.name?.toLowerCase().includes('mobile') ||
+      selectedSubCategory?.name?.toLowerCase().includes('mobile')) {
+    categorySlug = 'mobile-phones';
+  }
+  
+  console.log('Category slug for API:', categorySlug);
+  console.log('Selected category:', selectedCategory?.name, selectedCategory?.slug);
+  console.log('Selected sub-category:', selectedSubCategory?.name, selectedSubCategory?.slug);
+  console.log('Selected sub-item:', selectedSubItem?.name, selectedSubItem?.slug);
 
   return (
     <>

@@ -164,21 +164,24 @@ export const fetchCategoryFields = async (
 ): Promise<CategoryFieldsResponse> => {
   try {
     const baseUrl = getApiBaseUrl();
-    const response = await fetch(
-      `${baseUrl}/api/categoryFields?categorySlugs=${categorySlug}&includeChildCategories=true&splitByCategoryIDs=true&flatChoices=true&groupChoicesBySection=true&flat=true`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const apiUrl = `${baseUrl}/api/categoryFields?categorySlugs=${categorySlug}&includeChildCategories=true&splitByCategoryIDs=true&flatChoices=true&groupChoicesBySection=true&flat=true`;
+    
+    console.log('fetchCategoryFields - API URL:', apiUrl);
+    console.log('fetchCategoryFields - categorySlug:', categorySlug);
+    
+    const response = await fetch(apiUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to fetch category fields: ${response.statusText}`);
     }
 
     const data: CategoryFieldsResponse = await response.json();
+    console.log('fetchCategoryFields - API Response:', data);
     return data;
   } catch (error) {
     console.error('Error fetching category fields:', error);
