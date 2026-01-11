@@ -125,7 +125,7 @@ export interface FieldChoice {
 
 export interface CategoryField {
   id: number;
-  valueType: 'enum' | 'float' | 'string' | 'integer';
+  valueType: 'enum' | 'enum_multiple' | 'float' | 'string' | 'integer';
   roles: string[];
   attribute: string;
   categoryID: number;

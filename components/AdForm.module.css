@@ -31,6 +31,34 @@
   grid-column: 1 / -1;
 }
 
+.postButtonContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding: 0;
+}
+
+.postButton {
+  background-color: #0066cc;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.postButton:hover {
+  background-color: #0052a3;
+}
+
+.postButton:active {
+  background-color: #003d7a;
+}
+
 .formField {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -726,6 +754,16 @@
 
   .changeButton {
     align-self: flex-end;
+  }
+
+  .postButtonContainer {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  .postButton {
+    width: 100%;
+    padding: 14px 24px;
   }
 }
 

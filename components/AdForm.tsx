@@ -297,9 +297,11 @@ const AdForm: React.FC<AdFormProps> = ({
       );
     }
 
-    if (field.valueType === 'enum' && field.filterType === 'multiple_choice') {
+    if ((field.valueType === 'enum' || field.valueType === 'enum_multiple') && field.filterType === 'multiple_choice') {
+      const choices = field.choices || [];
+      
+      // Button group for single selection (like condition)
       if (field.attribute === 'new_used' || field.attribute === 'condition') {
-        const choices = field.choices || [];
         return (
           <div key={field.id} className={styles.formField}>
             <label className={styles.fieldLabel}>
@@ -324,42 +326,7 @@ const AdForm: React.FC<AdFormProps> = ({
         );
       }
 
-      if (field.attribute === 'price_type') {
-        const choices = field.choices || [];
-        return (
-          <div key={field.id} className={styles.formField}>
-            <label className={styles.fieldLabel}>
-              {fieldLabel}
-              {isRequired && <span className={styles.required}>*</span>}
-            </label>
-            <div className={styles.fieldInputWrapper}>
-              <div className={styles.checkboxGroup}>
-                {choices.map((choice) => (
-                  <label key={choice.id} className={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      className={styles.checkbox}
-                      checked={Array.isArray(fieldValue) && fieldValue.includes(choice.value)}
-                      onChange={(e) => {
-                        const currentValues = Array.isArray(fieldValue) ? fieldValue : [];
-                        if (e.target.checked) {
-                          handleFieldChange(field.attribute, [...currentValues, choice.value]);
-                        } else {
-                          handleFieldChange(field.attribute, currentValues.filter((v) => v !== choice.value));
-                        }
-                      }}
-                    />
-                    <span>{language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-      }
-    }
-
-    if (field.valueType === 'float' && field.attribute === 'price') {
+      // Checkboxes for multiple selection (like price_type, features)
       return (
         <div key={field.id} className={styles.formField}>
           <label className={styles.fieldLabel}>
@@ -367,43 +334,104 @@ const AdForm: React.FC<AdFormProps> = ({
             {isRequired && <span className={styles.required}>*</span>}
           </label>
           <div className={styles.fieldInputWrapper}>
-            <div className={styles.segmentedInput}>
-              <div className={styles.segmentLeft}>USD</div>
-              <input
-                type="number"
-                className={`${styles.segmentRight} ${isRequired && !fieldValue ? styles.error : ''}`}
-                placeholder="Enter Price"
-                value={fieldValue || ''}
-                onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
-                min={field.minValue || undefined}
-                max={field.maxValue || undefined}
-              />
+            <div className={styles.checkboxGroup}>
+              {choices.map((choice) => (
+                <label key={choice.id} className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={Array.isArray(fieldValue) && fieldValue.includes(choice.value)}
+                    onChange={(e) => {
+                      const currentValues = Array.isArray(fieldValue) ? fieldValue : [];
+                      if (e.target.checked) {
+                        handleFieldChange(field.attribute, [...currentValues, choice.value]);
+                      } else {
+                        handleFieldChange(field.attribute, currentValues.filter((v) => v !== choice.value));
+                      }
+                    }}
+                  />
+                  <span>{language === 'ar' && choice.label_l1 ? choice.label_l1 : choice.label}</span>
+                </label>
+              ))}
             </div>
-            {isRequired && !fieldValue && (
-              <div className={styles.errorMessage}>This field is required</div>
-            )}
           </div>
         </div>
       );
     }
 
-    if (field.valueType === 'float' && field.attribute === 'secondary_price') {
+    if (field.valueType === 'float' || field.valueType === 'integer') {
+      // Special handling for price fields
+      if (field.attribute === 'price') {
+        return (
+          <div key={field.id} className={styles.formField}>
+            <label className={styles.fieldLabel}>
+              {fieldLabel}
+              {isRequired && <span className={styles.required}>*</span>}
+            </label>
+            <div className={styles.fieldInputWrapper}>
+              <div className={styles.segmentedInput}>
+                <div className={styles.segmentLeft}>USD</div>
+                <input
+                  type="number"
+                  className={`${styles.segmentRight} ${isRequired && !fieldValue ? styles.error : ''}`}
+                  placeholder="Enter Price"
+                  value={fieldValue || ''}
+                  onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
+                  min={field.minValue || undefined}
+                  max={field.maxValue || undefined}
+                />
+              </div>
+              {isRequired && !fieldValue && (
+                <div className={styles.errorMessage}>This field is required</div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      if (field.attribute === 'secondary_price') {
+        return (
+          <div key={field.id} className={styles.formField}>
+            <label className={styles.fieldLabelOptional}>Optional price</label>
+            <div className={styles.fieldInputWrapper}>
+              <div className={styles.segmentedInput}>
+                <div className={styles.segmentLeft}>LBP</div>
+                <input
+                  type="number"
+                  className={styles.segmentRightOptional}
+                  placeholder="Enter Optional price"
+                  value={fieldValue || ''}
+                  onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
+                  min={field.minValue || undefined}
+                  max={field.maxValue || undefined}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      // Regular number input for other float/integer fields (like ft, rooms, bathrooms)
       return (
         <div key={field.id} className={styles.formField}>
-          <label className={styles.fieldLabelOptional}>Optional price</label>
+          <label className={styles.fieldLabel}>
+            {fieldLabel}
+            {isRequired && <span className={styles.required}>*</span>}
+          </label>
           <div className={styles.fieldInputWrapper}>
-            <div className={styles.segmentedInput}>
-              <div className={styles.segmentLeft}>LBP</div>
-              <input
-                type="number"
-                className={styles.segmentRightOptional}
-                placeholder="Enter Optional price"
-                value={fieldValue || ''}
-                onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
-                min={field.minValue || undefined}
-                max={field.maxValue || undefined}
-              />
-            </div>
+            <input
+              type="number"
+              className={styles.textInput}
+              placeholder={`Enter ${fieldLabel.toLowerCase()}`}
+              value={fieldValue || ''}
+              onChange={(e) => handleFieldChange(field.attribute, e.target.value)}
+              min={field.minValue || undefined}
+              max={field.maxValue || undefined}
+              required={isRequired}
+            />
+            {isRequired && !fieldValue && (
+              <div className={styles.errorMessage}>This field is required</div>
+            )}
           </div>
         </div>
       );
@@ -506,6 +534,7 @@ const AdForm: React.FC<AdFormProps> = ({
   const categoryIconUrl = getCategoryIconUrl();
 
   return (
+    <>
     <div className={styles.formContainer}>
       {/* Category Section */}
       <div className={styles.formSection}>
@@ -1179,6 +1208,21 @@ const AdForm: React.FC<AdFormProps> = ({
         </div>
       </div>
     </div>
+
+    {/* Post Now Button - Outside form border */}
+    <div className={styles.postButtonContainer}>
+      <button
+        type="button"
+        className={styles.postButton}
+        onClick={() => {
+          console.log('Post now clicked', formData);
+          // TODO: Implement form submission logic
+        }}
+      >
+        Post now
+      </button>
+    </div>
+    </>
   );
 };
 
