@@ -281,7 +281,7 @@ const CategoryBrowser: React.FC<CategoryBrowserProps> = ({
                 {subCategories.map((subCategory, subIndex) => {
                   const subCategoryName = language === 'ar' ? subCategory.name_l1 : subCategory.name;
                   const isSubExpanded = expandedSubCategoryId === subCategory.id;
-                  const hasChildren = subCategoryItemsMap.get(subCategory.id)?.length > 0 || false;
+                  const hasChildren = (subCategoryItemsMap.get(subCategory.id)?.length ?? 0) > 0;
                   const subItems = subCategoryItemsMap.get(subCategory.id) || [];
 
                   return (

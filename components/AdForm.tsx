@@ -1134,7 +1134,7 @@ const AdForm: React.FC<AdFormProps> = ({
             <div className={styles.toggleText}>
               Deliver your items using{' '}
               <a href="#" className={styles.toggleLink}>Pik&Drop</a>
-              {' '} - Dubizzle Lebanon's exclusive delivery partner or through{' '}
+              {' '} - Dubizzle Lebanon&apos;s exclusive delivery partner or through{' '}
               <a href="#" className={styles.toggleLink}>Self-Delivery</a>
             </div>
           </div>
