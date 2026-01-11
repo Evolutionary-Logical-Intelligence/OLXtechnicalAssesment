@@ -533,6 +533,24 @@ const AdForm: React.FC<AdFormProps> = ({
   const categorySubName = getCategorySubName();
   const categoryIconUrl = getCategoryIconUrl();
 
+  const isPropertiesCategory = categorySlug?.toLowerCase().includes('property') || 
+                                categorySlug?.toLowerCase().includes('real-estate') ||
+                                selectedCategory?.slug?.toLowerCase().includes('property') ||
+                                selectedCategory?.name?.toLowerCase().includes('property') ||
+                                selectedCategory?.name?.toLowerCase().includes('real estate');
+
+  const propertyTypeField = visibleFields.find(f => f.attribute === 'property_type');
+  const roomsField = visibleFields.find(f => f.attribute === 'rooms');
+  const bathroomsField = visibleFields.find(f => f.attribute === 'bathrooms');
+  const ftField = visibleFields.find(f => f.attribute === 'ft');
+  const furnishedField = visibleFields.find(f => f.attribute === 'furnished');
+  const conditionField = visibleFields.find(f => f.attribute === 'condition');
+  const floorLevelField = visibleFields.find(f => f.attribute === 'floor_level');
+  const featuresField = visibleFields.find(f => f.attribute === 'features');
+  const propertyAgeField = visibleFields.find(f => f.attribute === 'property_age');
+  const ownershipField = visibleFields.find(f => f.attribute === 'ownership');
+  const paymentOptionField = visibleFields.find(f => f.attribute === 'payment_option');
+
   return (
     <>
     <div className={styles.formContainer}>
@@ -1126,22 +1144,85 @@ const AdForm: React.FC<AdFormProps> = ({
       {/* Border after Delivery */}
       <div className={styles.sectionBorder}></div>
 
-      {/* Render remaining fields */}
+      {/* Property-specific fields */}
+      {isPropertiesCategory && (
+        <>
+          {/* Property Type */}
+          {propertyTypeField && renderField(propertyTypeField)}
+
+          {/* Ownership */}
+          {ownershipField && renderField(ownershipField)}
+
+          {/* Rooms */}
+          {roomsField && renderField(roomsField)}
+
+          {/* Bathrooms */}
+          {bathroomsField && renderField(bathroomsField)}
+
+          {/* Square Feet (ft) */}
+          {ftField && renderField(ftField)}
+
+          {/* Furnished */}
+          {furnishedField && renderField(furnishedField)}
+
+          {/* Condition */}
+          {conditionField && renderField(conditionField)}
+
+          {/* Floor Level */}
+          {floorLevelField && renderField(floorLevelField)}
+
+          {/* Features */}
+          {featuresField && renderField(featuresField)}
+
+          {/* Property Age */}
+          {propertyAgeField && renderField(propertyAgeField)}
+
+          {/* Payment Option */}
+          {paymentOptionField && renderField(paymentOptionField)}
+        </>
+      )}
+
+      {/* Render remaining fields (excluding already rendered ones) */}
       {visibleFields
-        .filter(f => 
-          f.attribute !== 'make' && 
-          f.attribute !== 'brand' && 
-          f.attribute !== 'model' && 
-          f.attribute !== 'new_used' && 
-          f.attribute !== 'condition' && 
-          f.attribute !== 'storage' && 
-          f.attribute !== 'color' && 
-          f.attribute !== 'title' && 
-          f.attribute !== 'description' &&
-          f.attribute !== 'price' &&
-          f.attribute !== 'secondary_price' &&
-          f.attribute !== 'price_type'
-        )
+        .filter(f => {
+          // Exclude mobile phone specific fields
+          if (f.attribute === 'make' || 
+              f.attribute === 'brand' || 
+              f.attribute === 'model' || 
+              f.attribute === 'storage' || 
+              f.attribute === 'color') {
+            return false;
+          }
+          // Exclude common fields
+          if (f.attribute === 'title' || 
+              f.attribute === 'description' ||
+              f.attribute === 'price' ||
+              f.attribute === 'secondary_price' ||
+              f.attribute === 'price_type') {
+            return false;
+          }
+          // Exclude property fields if we're in properties category (already rendered above)
+          if (isPropertiesCategory && (
+            f.attribute === 'property_type' ||
+            f.attribute === 'rooms' ||
+            f.attribute === 'bathrooms' ||
+            f.attribute === 'ft' ||
+            f.attribute === 'furnished' ||
+            f.attribute === 'condition' ||
+            f.attribute === 'floor_level' ||
+            f.attribute === 'features' ||
+            f.attribute === 'property_age' ||
+            f.attribute === 'ownership' ||
+            f.attribute === 'payment_option'
+          )) {
+            return false;
+          }
+          // Exclude condition/new_used if not properties (handled separately)
+          if (!isPropertiesCategory && (f.attribute === 'new_used' || f.attribute === 'condition')) {
+            return false;
+          }
+          return true;
+        })
         .map((field) => renderField(field))}
 
       <div className={styles.formField}>
